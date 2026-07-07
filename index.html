@@ -1,0 +1,150 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#0f172a" />
+  <title>Finns Wecker</title>
+  <link rel="manifest" href="manifest.json" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="app-shell">
+    <header class="topbar">
+      <div>
+        <p class="eyebrow">Alarm Dashboard</p>
+        <h1>Finns Wecker</h1>
+      </div>
+      <div class="clock-card" aria-label="Aktuelle Uhrzeit">
+        <div id="clock" class="clock">--:--:--</div>
+        <div id="today" class="today">--</div>
+      </div>
+    </header>
+
+    <main class="layout">
+      <section class="panel create-panel" aria-labelledby="create-title">
+        <div class="panel-head">
+          <div>
+            <p class="eyebrow">Neuer Alarm</p>
+            <h2 id="create-title">Wecker einstellen</h2>
+          </div>
+          <button id="testSoundBtn" class="ghost-button" type="button">Ton testen</button>
+        </div>
+
+        <form id="alarmForm" class="alarm-form">
+          <div class="time-input-row">
+            <label class="field compact">
+              <span>Stunde</span>
+              <input id="hourInput" type="number" min="0" max="23" inputmode="numeric" value="07" required />
+            </label>
+            <div class="colon">:</div>
+            <label class="field compact">
+              <span>Minute</span>
+              <input id="minuteInput" type="number" min="0" max="59" inputmode="numeric" value="30" required />
+            </label>
+          </div>
+
+          <div class="quick-row" aria-label="Schnellwecker">
+            <button class="chip" type="button" data-add-minutes="1">+1 min</button>
+            <button class="chip" type="button" data-add-minutes="5">+5 min</button>
+            <button class="chip" type="button" data-add-minutes="10">+10 min</button>
+            <button class="chip" type="button" data-add-minutes="30">+30 min</button>
+          </div>
+
+          <label class="field">
+            <span>Beschriftung</span>
+            <input id="labelInput" type="text" maxlength="40" placeholder="z. B. Uni, Lauftraining, Aufstehen" />
+          </label>
+
+          <div class="segmented" role="radiogroup" aria-label="Alarmtyp">
+            <label>
+              <input type="radio" name="alarmType" value="once" checked />
+              <span>Einmalig</span>
+            </label>
+            <label>
+              <input type="radio" name="alarmType" value="daily" />
+              <span>Täglich</span>
+            </label>
+            <label>
+              <input type="radio" name="alarmType" value="weekdays" />
+              <span>Mo–Fr</span>
+            </label>
+          </div>
+
+          <label id="dateField" class="field">
+            <span>Datum für einmaligen Alarm</span>
+            <input id="dateInput" type="date" required />
+          </label>
+
+          <div class="settings-grid">
+            <label class="field">
+              <span>Lautstärke</span>
+              <input id="volumeInput" type="range" min="0.05" max="1" step="0.05" value="0.65" />
+            </label>
+            <label class="toggle-row">
+              <input id="vibrateInput" type="checkbox" checked />
+              <span>Vibration nutzen, falls verfügbar</span>
+            </label>
+          </div>
+
+          <button class="primary-button" type="submit">Alarm hinzufügen</button>
+        </form>
+      </section>
+
+      <section class="panel list-panel" aria-labelledby="list-title">
+        <div class="panel-head list-head">
+          <div>
+            <p class="eyebrow">Gespeichert</p>
+            <h2 id="list-title">Aktive Wecker</h2>
+          </div>
+          <div class="head-actions">
+            <button id="notifyBtn" class="ghost-button" type="button">Benachrichtigungen</button>
+            <button id="wakeLockBtn" class="ghost-button" type="button">Wachhalten</button>
+            <button id="clearDoneBtn" class="ghost-button danger-text" type="button">Erledigte löschen</button>
+          </div>
+        </div>
+
+        <div id="status" class="status" role="status">Bereit. Diese Web-App muss geöffnet bleiben, damit Alarme auslösen.</div>
+        <div id="alarmsList" class="alarms-list" aria-live="polite"></div>
+        <div id="emptyState" class="empty-state">
+          <div class="empty-icon">⏰</div>
+          <h3>Noch keine Alarme</h3>
+          <p>Stelle links einen Wecker ein oder nutze einen Schnellwecker.</p>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <div id="alarmOverlay" class="overlay hidden" role="dialog" aria-modal="true" aria-labelledby="ringTitle">
+    <div class="ring-card">
+      <p class="eyebrow">Alarm</p>
+      <h2 id="ringTitle">Zeit ist um</h2>
+      <div id="ringTime" class="ring-time">--:--</div>
+      <div id="ringLabel" class="ring-label">Alarm</div>
+      <div class="ring-actions">
+        <button id="stopBtn" class="primary-button stop-button" type="button">Stoppen</button>
+        <button id="snooze5Btn" class="secondary-button" type="button">Snooze 5 min</button>
+        <button id="snooze10Btn" class="secondary-button" type="button">Snooze 10 min</button>
+      </div>
+    </div>
+  </div>
+
+  <template id="alarmTemplate">
+    <article class="alarm-card">
+      <div class="alarm-main">
+        <div class="alarm-time">07:30</div>
+        <div>
+          <h3 class="alarm-label">Alarm</h3>
+          <p class="alarm-meta">Einmalig · Heute</p>
+        </div>
+      </div>
+      <div class="alarm-actions">
+        <button class="small-button toggle-btn" type="button">Deaktivieren</button>
+        <button class="small-button delete-btn danger" type="button">Löschen</button>
+      </div>
+    </article>
+  </template>
+
+  <script src="app.js"></script>
+</body>
+</html>
