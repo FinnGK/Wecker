@@ -5,146 +5,1191 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="theme-color" content="#0f172a" />
   <title>Finns Wecker</title>
-  <link rel="manifest" href="manifest.json" />
-  <link rel="stylesheet" href="styles.css" />
+  <style>
+    :root {
+      color-scheme: dark;
+      --bg: #080d18;
+      --bg-soft: #0f172a;
+      --card: rgba(15, 23, 42, 0.92);
+      --card-2: rgba(30, 41, 59, 0.82);
+      --line: rgba(148, 163, 184, 0.22);
+      --text: #f8fafc;
+      --muted: #94a3b8;
+      --muted-2: #64748b;
+      --accent: #38bdf8;
+      --accent-2: #0ea5e9;
+      --ok: #22c55e;
+      --warn: #f59e0b;
+      --danger: #ef4444;
+      --shadow: 0 24px 80px rgba(0, 0, 0, 0.42);
+      --radius-xl: 28px;
+      --radius-lg: 20px;
+      --radius-md: 14px;
+      --focus: 0 0 0 4px rgba(56, 189, 248, 0.28);
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background:
+        radial-gradient(circle at 15% 5%, rgba(56, 189, 248, 0.22), transparent 30%),
+        radial-gradient(circle at 85% 0%, rgba(99, 102, 241, 0.18), transparent 28%),
+        linear-gradient(135deg, #020617, #0f172a 52%, #111827);
+      color: var(--text);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      line-height: 1.4;
+    }
+
+    button,
+    input,
+    select {
+      font: inherit;
+    }
+
+    button {
+      border: 0;
+      cursor: pointer;
+      user-select: none;
+    }
+
+    button:disabled {
+      cursor: not-allowed;
+      opacity: 0.5;
+    }
+
+    .app {
+      width: min(1180px, calc(100% - 32px));
+      margin: 0 auto;
+      padding: 28px 0 42px;
+    }
+
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+      margin-bottom: 24px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .logo {
+      width: 48px;
+      height: 48px;
+      border-radius: 16px;
+      display: grid;
+      place-items: center;
+      background: linear-gradient(135deg, var(--accent), #818cf8);
+      box-shadow: 0 16px 40px rgba(56, 189, 248, 0.22);
+      color: #00111d;
+      font-weight: 900;
+      font-size: 24px;
+    }
+
+    .brand h1 {
+      margin: 0;
+      font-size: clamp(28px, 4vw, 44px);
+      letter-spacing: -0.06em;
+      line-height: 1;
+    }
+
+    .brand p {
+      margin: 6px 0 0;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .top-actions {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
+
+    .btn {
+      min-height: 44px;
+      padding: 0 16px;
+      border-radius: 999px;
+      color: var(--text);
+      background: rgba(30, 41, 59, 0.82);
+      border: 1px solid var(--line);
+      transition: transform .16s ease, background .16s ease, border-color .16s ease;
+    }
+
+    .btn:hover { transform: translateY(-1px); border-color: rgba(148, 163, 184, 0.45); }
+    .btn:focus-visible { outline: none; box-shadow: var(--focus); }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--accent), var(--accent-2));
+      color: #001827;
+      font-weight: 800;
+      border-color: rgba(255,255,255,0.15);
+    }
+
+    .btn-danger { background: rgba(239, 68, 68, 0.18); border-color: rgba(239, 68, 68, 0.38); color: #fecaca; }
+    .btn-ok { background: rgba(34, 197, 94, 0.18); border-color: rgba(34, 197, 94, 0.38); color: #bbf7d0; }
+
+    .grid {
+      display: grid;
+      grid-template-columns: minmax(310px, 420px) 1fr;
+      gap: 22px;
+      align-items: start;
+    }
+
+    .card {
+      border: 1px solid var(--line);
+      background: var(--card);
+      border-radius: var(--radius-xl);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(18px);
+      overflow: hidden;
+    }
+
+    .clock-card {
+      padding: 26px;
+      margin-bottom: 22px;
+      background:
+        linear-gradient(180deg, rgba(56, 189, 248, 0.13), transparent 55%),
+        var(--card);
+    }
+
+    .time {
+      font-variant-numeric: tabular-nums;
+      font-size: clamp(58px, 8vw, 86px);
+      letter-spacing: -0.08em;
+      line-height: .95;
+      font-weight: 900;
+    }
+
+    .date-line {
+      margin-top: 10px;
+      color: var(--muted);
+      display: flex;
+      justify-content: space-between;
+      gap: 14px;
+      flex-wrap: wrap;
+    }
+
+    .panel-head {
+      padding: 22px 24px 0;
+    }
+
+    .panel-head h2 {
+      margin: 0;
+      font-size: 20px;
+      letter-spacing: -0.03em;
+    }
+
+    .panel-head p {
+      margin: 6px 0 0;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    form {
+      padding: 22px 24px 24px;
+    }
+
+    .field {
+      margin-bottom: 16px;
+    }
+
+    label {
+      display: block;
+      color: #dbeafe;
+      font-size: 13px;
+      font-weight: 800;
+      margin-bottom: 8px;
+    }
+
+    input,
+    select {
+      width: 100%;
+      min-height: 50px;
+      border-radius: var(--radius-md);
+      border: 1px solid rgba(148, 163, 184, 0.28);
+      background: rgba(2, 6, 23, 0.68);
+      color: var(--text);
+      padding: 0 14px;
+      outline: none;
+      transition: border-color .16s ease, box-shadow .16s ease, background .16s ease;
+    }
+
+    input:focus,
+    select:focus {
+      border-color: var(--accent);
+      box-shadow: var(--focus);
+      background: rgba(2, 6, 23, 0.88);
+    }
+
+    input[type="date"] { color-scheme: dark; }
+
+    .time-inputs {
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      gap: 10px;
+      align-items: end;
+    }
+
+    .time-inputs input {
+      text-align: center;
+      font-size: 34px;
+      font-weight: 900;
+      letter-spacing: -0.04em;
+      height: 68px;
+    }
+
+    .colon {
+      font-size: 36px;
+      line-height: 68px;
+      color: var(--muted);
+      font-weight: 900;
+      padding-bottom: 1px;
+    }
+
+    .row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    .quick-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 10px;
+      margin-top: 6px;
+    }
+
+    .quick-grid .btn {
+      min-height: 48px;
+      border-radius: 16px;
+      padding: 0 8px;
+      font-weight: 800;
+    }
+
+    .submit-row {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 10px;
+      margin-top: 18px;
+    }
+
+    .list-card {
+      min-height: 620px;
+    }
+
+    .list-toolbar {
+      padding: 16px 24px 0;
+      display: flex;
+      gap: 10px;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .count {
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .alarm-list {
+      padding: 18px 18px 20px;
+      display: grid;
+      gap: 12px;
+    }
+
+    .empty {
+      min-height: 300px;
+      display: grid;
+      place-items: center;
+      text-align: center;
+      color: var(--muted);
+      border: 1px dashed rgba(148, 163, 184, 0.28);
+      border-radius: 22px;
+      padding: 30px;
+    }
+
+    .empty strong { display: block; color: var(--text); font-size: 20px; margin-bottom: 8px; }
+
+    .alarm-item {
+      display: grid;
+      grid-template-columns: 116px 1fr auto;
+      gap: 16px;
+      align-items: center;
+      padding: 16px;
+      border-radius: 22px;
+      background: rgba(15, 23, 42, 0.72);
+      border: 1px solid rgba(148, 163, 184, 0.2);
+    }
+
+    .alarm-item.off {
+      opacity: .56;
+    }
+
+    .alarm-time {
+      font-size: 34px;
+      font-weight: 900;
+      letter-spacing: -0.06em;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .alarm-info h3 {
+      margin: 0 0 6px;
+      font-size: 18px;
+      letter-spacing: -0.02em;
+    }
+
+    .meta {
+      color: var(--muted);
+      font-size: 13px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      align-items: center;
+    }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      height: 26px;
+      padding: 0 10px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 800;
+      background: rgba(148, 163, 184, 0.14);
+      color: #cbd5e1;
+      border: 1px solid rgba(148, 163, 184, 0.18);
+    }
+
+    .pill.active { background: rgba(34, 197, 94, 0.14); color: #bbf7d0; border-color: rgba(34, 197, 94, 0.28); }
+    .pill.off { background: rgba(239, 68, 68, 0.12); color: #fecaca; border-color: rgba(239, 68, 68, 0.25); }
+    .pill.snooze { background: rgba(245, 158, 11, 0.13); color: #fde68a; border-color: rgba(245, 158, 11, 0.24); }
+
+    .item-actions {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
+
+    .icon-btn {
+      width: 42px;
+      height: 42px;
+      border-radius: 14px;
+      display: grid;
+      place-items: center;
+      background: rgba(30, 41, 59, 0.9);
+      color: var(--text);
+      border: 1px solid rgba(148, 163, 184, 0.2);
+      font-weight: 900;
+    }
+
+    .icon-btn:hover { background: rgba(51, 65, 85, 0.95); }
+    .icon-btn:focus-visible { outline: none; box-shadow: var(--focus); }
+
+    .status {
+      margin-top: 16px;
+      color: var(--muted);
+      font-size: 13px;
+      min-height: 18px;
+    }
+
+    .modal {
+      position: fixed;
+      inset: 0;
+      z-index: 40;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      background: rgba(2, 6, 23, 0.82);
+      backdrop-filter: blur(18px);
+    }
+
+    .modal.open { display: flex; }
+
+    .alarm-popup {
+      width: min(620px, 100%);
+      border-radius: 34px;
+      border: 1px solid rgba(255,255,255,0.14);
+      background:
+        radial-gradient(circle at 50% 0%, rgba(56, 189, 248, 0.24), transparent 48%),
+        #0f172a;
+      box-shadow: 0 40px 120px rgba(0,0,0,.68);
+      padding: 32px;
+      text-align: center;
+    }
+
+    .ring {
+      width: 90px;
+      height: 90px;
+      margin: 0 auto 18px;
+      border-radius: 30px;
+      display: grid;
+      place-items: center;
+      background: linear-gradient(135deg, var(--accent), #818cf8);
+      color: #001827;
+      font-size: 44px;
+      animation: pulse 1.05s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { transform: scale(1) rotate(-4deg); }
+      50% { transform: scale(1.08) rotate(4deg); }
+    }
+
+    .popup-time {
+      font-size: clamp(72px, 16vw, 130px);
+      line-height: .9;
+      letter-spacing: -0.08em;
+      font-weight: 950;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .popup-label {
+      margin: 16px auto 28px;
+      color: #dbeafe;
+      font-size: 22px;
+      font-weight: 700;
+    }
+
+    .popup-actions {
+      display: grid;
+      grid-template-columns: 1.2fr 1fr 1fr;
+      gap: 12px;
+    }
+
+    .popup-actions .btn {
+      min-height: 62px;
+      border-radius: 20px;
+      font-size: 17px;
+      font-weight: 900;
+    }
+
+    .toast {
+      position: fixed;
+      left: 50%;
+      bottom: 22px;
+      transform: translateX(-50%) translateY(120%);
+      transition: transform .22s ease;
+      z-index: 60;
+      padding: 12px 16px;
+      border-radius: 999px;
+      background: rgba(15, 23, 42, 0.96);
+      border: 1px solid rgba(148, 163, 184, 0.24);
+      color: var(--text);
+      box-shadow: 0 12px 36px rgba(0,0,0,.4);
+      max-width: min(640px, calc(100% - 32px));
+      text-align: center;
+    }
+
+    .toast.show { transform: translateX(-50%) translateY(0); }
+
+    .footer-note {
+      color: var(--muted-2);
+      font-size: 12px;
+      margin-top: 16px;
+    }
+
+    @media (max-width: 900px) {
+      .grid { grid-template-columns: 1fr; }
+      .list-card { min-height: auto; }
+    }
+
+    @media (max-width: 650px) {
+      .app { width: min(100% - 20px, 1180px); padding-top: 14px; }
+      .topbar { align-items: flex-start; flex-direction: column; }
+      .top-actions { justify-content: flex-start; }
+      .alarm-item { grid-template-columns: 1fr; gap: 10px; }
+      .item-actions { justify-content: flex-start; }
+      .popup-actions { grid-template-columns: 1fr; }
+      .row { grid-template-columns: 1fr; }
+      .quick-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+  </style>
 </head>
 <body>
-  <div class="app-shell">
+  <main class="app">
     <header class="topbar">
-      <div>
-        <p class="eyebrow">Alarm Dashboard</p>
-        <h1>Finns Wecker</h1>
+      <div class="brand">
+        <div class="logo" aria-hidden="true">⏰</div>
+        <div>
+          <h1>Finns Wecker</h1>
+          <p>Schöne Web-App für lokale Alarme im Browser.</p>
+        </div>
       </div>
-      <div class="clock-card" aria-label="Aktuelle Uhrzeit">
-        <div id="clock" class="clock">--:--:--</div>
-        <div id="today" class="today">--</div>
+      <div class="top-actions">
+        <button id="notifyBtn" class="btn" type="button">Benachrichtigungen</button>
+        <button id="wakeBtn" class="btn" type="button">Bildschirm wach halten</button>
+        <button id="testBtn" class="btn" type="button">Ton testen</button>
       </div>
     </header>
 
-    <main class="layout">
-      <section class="panel create-panel" aria-labelledby="create-title">
+    <section class="grid">
+      <div>
+        <section class="card clock-card" aria-label="Aktuelle Uhrzeit">
+          <div id="clock" class="time">--:--:--</div>
+          <div class="date-line">
+            <span id="dateText">--</span>
+            <span id="nextText">Kein aktiver Alarm</span>
+          </div>
+        </section>
+
+        <section class="card">
+          <div class="panel-head">
+            <h2>Neuen Wecker erstellen</h2>
+            <p>Uhrzeit eingeben, Wiederholung wählen, speichern.</p>
+          </div>
+
+          <form id="alarmForm" autocomplete="off">
+            <div class="field">
+              <label for="label">Name</label>
+              <input id="label" type="text" placeholder="z. B. Aufstehen, Uni, Lernen" maxlength="42" />
+            </div>
+
+            <div class="field">
+              <label>Uhrzeit</label>
+              <div class="time-inputs">
+                <input id="hour" type="number" inputmode="numeric" min="0" max="23" step="1" aria-label="Stunde" />
+                <div class="colon">:</div>
+                <input id="minute" type="number" inputmode="numeric" min="0" max="59" step="1" aria-label="Minute" />
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="field">
+                <label for="repeat">Wiederholung</label>
+                <select id="repeat">
+                  <option value="once">Einmalig</option>
+                  <option value="daily">Täglich</option>
+                  <option value="weekdays">Mo–Fr</option>
+                </select>
+              </div>
+              <div class="field" id="dateField">
+                <label for="date">Datum</label>
+                <input id="date" type="date" />
+              </div>
+            </div>
+
+            <div class="field">
+              <label>Schnellwecker</label>
+              <div class="quick-grid">
+                <button class="btn" type="button" data-quick="1">+1 min</button>
+                <button class="btn" type="button" data-quick="5">+5 min</button>
+                <button class="btn" type="button" data-quick="10">+10 min</button>
+                <button class="btn" type="button" data-quick="30">+30 min</button>
+              </div>
+            </div>
+
+            <div class="submit-row">
+              <button class="btn btn-primary" type="submit">Wecker speichern</button>
+            </div>
+
+            <div id="formStatus" class="status" role="status"></div>
+          </form>
+        </section>
+      </div>
+
+      <section class="card list-card">
         <div class="panel-head">
-          <div>
-            <p class="eyebrow">Neuer Alarm</p>
-            <h2 id="create-title">Wecker einstellen</h2>
-          </div>
-          <button id="testSoundBtn" class="ghost-button" type="button">Ton testen</button>
+          <h2>Gespeicherte Wecker</h2>
+          <p>Alle Alarme werden lokal in deinem Browser gespeichert.</p>
         </div>
-
-        <form id="alarmForm" class="alarm-form">
-          <div class="time-input-row">
-            <label class="field compact">
-              <span>Stunde</span>
-              <input id="hourInput" type="number" min="0" max="23" inputmode="numeric" value="07" required />
-            </label>
-            <div class="colon">:</div>
-            <label class="field compact">
-              <span>Minute</span>
-              <input id="minuteInput" type="number" min="0" max="59" inputmode="numeric" value="30" required />
-            </label>
+        <div class="list-toolbar">
+          <div id="count" class="count">0 Wecker</div>
+          <div class="top-actions">
+            <button id="clearDoneBtn" class="btn" type="button">Erledigte löschen</button>
+            <button id="clearAllBtn" class="btn btn-danger" type="button">Alle löschen</button>
           </div>
-
-          <div class="quick-row" aria-label="Schnellwecker">
-            <button class="chip" type="button" data-add-minutes="1">+1 min</button>
-            <button class="chip" type="button" data-add-minutes="5">+5 min</button>
-            <button class="chip" type="button" data-add-minutes="10">+10 min</button>
-            <button class="chip" type="button" data-add-minutes="30">+30 min</button>
-          </div>
-
-          <label class="field">
-            <span>Beschriftung</span>
-            <input id="labelInput" type="text" maxlength="40" placeholder="z. B. Uni, Lauftraining, Aufstehen" />
-          </label>
-
-          <div class="segmented" role="radiogroup" aria-label="Alarmtyp">
-            <label>
-              <input type="radio" name="alarmType" value="once" checked />
-              <span>Einmalig</span>
-            </label>
-            <label>
-              <input type="radio" name="alarmType" value="daily" />
-              <span>Täglich</span>
-            </label>
-            <label>
-              <input type="radio" name="alarmType" value="weekdays" />
-              <span>Mo–Fr</span>
-            </label>
-          </div>
-
-          <label id="dateField" class="field">
-            <span>Datum für einmaligen Alarm</span>
-            <input id="dateInput" type="date" required />
-          </label>
-
-          <div class="settings-grid">
-            <label class="field">
-              <span>Lautstärke</span>
-              <input id="volumeInput" type="range" min="0.05" max="1" step="0.05" value="0.65" />
-            </label>
-            <label class="toggle-row">
-              <input id="vibrateInput" type="checkbox" checked />
-              <span>Vibration nutzen, falls verfügbar</span>
-            </label>
-          </div>
-
-          <button class="primary-button" type="submit">Alarm hinzufügen</button>
-        </form>
+        </div>
+        <div id="alarmList" class="alarm-list" aria-live="polite"></div>
       </section>
+    </section>
 
-      <section class="panel list-panel" aria-labelledby="list-title">
-        <div class="panel-head list-head">
-          <div>
-            <p class="eyebrow">Gespeichert</p>
-            <h2 id="list-title">Aktive Wecker</h2>
-          </div>
-          <div class="head-actions">
-            <button id="notifyBtn" class="ghost-button" type="button">Benachrichtigungen</button>
-            <button id="wakeLockBtn" class="ghost-button" type="button">Wachhalten</button>
-            <button id="clearDoneBtn" class="ghost-button danger-text" type="button">Erledigte löschen</button>
-          </div>
-        </div>
+    <p class="footer-note">Hinweis: Web-Wecker funktionieren nur zuverlässig, solange diese Seite geöffnet bleibt und der Computer nicht schläft.</p>
+  </main>
 
-        <div id="status" class="status" role="status">Bereit. Diese Web-App muss geöffnet bleiben, damit Alarme auslösen.</div>
-        <div id="alarmsList" class="alarms-list" aria-live="polite"></div>
-        <div id="emptyState" class="empty-state">
-          <div class="empty-icon">⏰</div>
-          <h3>Noch keine Alarme</h3>
-          <p>Stelle links einen Wecker ein oder nutze einen Schnellwecker.</p>
-        </div>
-      </section>
-    </main>
-  </div>
-
-  <div id="alarmOverlay" class="overlay hidden" role="dialog" aria-modal="true" aria-labelledby="ringTitle">
-    <div class="ring-card">
-      <p class="eyebrow">Alarm</p>
-      <h2 id="ringTitle">Zeit ist um</h2>
-      <div id="ringTime" class="ring-time">--:--</div>
-      <div id="ringLabel" class="ring-label">Alarm</div>
-      <div class="ring-actions">
-        <button id="stopBtn" class="primary-button stop-button" type="button">Stoppen</button>
-        <button id="snooze5Btn" class="secondary-button" type="button">Snooze 5 min</button>
-        <button id="snooze10Btn" class="secondary-button" type="button">Snooze 10 min</button>
+  <div id="alarmModal" class="modal" role="dialog" aria-modal="true" aria-labelledby="popupTitle">
+    <div class="alarm-popup">
+      <div class="ring" aria-hidden="true">⏰</div>
+      <div id="popupTitle" class="popup-time">--:--</div>
+      <div id="popupLabel" class="popup-label">Alarm</div>
+      <div class="popup-actions">
+        <button id="stopAlarmBtn" class="btn btn-primary" type="button">Stoppen</button>
+        <button id="snooze5Btn" class="btn" type="button">Snooze 5 min</button>
+        <button id="snooze10Btn" class="btn" type="button">Snooze 10 min</button>
       </div>
     </div>
   </div>
 
-  <template id="alarmTemplate">
-    <article class="alarm-card">
-      <div class="alarm-main">
-        <div class="alarm-time">07:30</div>
-        <div>
-          <h3 class="alarm-label">Alarm</h3>
-          <p class="alarm-meta">Einmalig · Heute</p>
-        </div>
-      </div>
-      <div class="alarm-actions">
-        <button class="small-button toggle-btn" type="button">Deaktivieren</button>
-        <button class="small-button delete-btn danger" type="button">Löschen</button>
-      </div>
-    </article>
-  </template>
+  <div id="toast" class="toast" role="status"></div>
 
-  <script src="app.js"></script>
+  <script>
+    (() => {
+      'use strict';
+
+      const STORAGE_KEY = 'finns-wecker-v1';
+      const $ = (id) => document.getElementById(id);
+
+      const state = {
+        alarms: [],
+        activeAlarm: null,
+        audioContext: null,
+        audioNodes: [],
+        ringingTimer: null,
+        wakeLock: null
+      };
+
+      const dom = {
+        clock: $('clock'),
+        dateText: $('dateText'),
+        nextText: $('nextText'),
+        alarmForm: $('alarmForm'),
+        label: $('label'),
+        hour: $('hour'),
+        minute: $('minute'),
+        repeat: $('repeat'),
+        date: $('date'),
+        dateField: $('dateField'),
+        formStatus: $('formStatus'),
+        alarmList: $('alarmList'),
+        count: $('count'),
+        notifyBtn: $('notifyBtn'),
+        wakeBtn: $('wakeBtn'),
+        testBtn: $('testBtn'),
+        clearDoneBtn: $('clearDoneBtn'),
+        clearAllBtn: $('clearAllBtn'),
+        alarmModal: $('alarmModal'),
+        popupTitle: $('popupTitle'),
+        popupLabel: $('popupLabel'),
+        stopAlarmBtn: $('stopAlarmBtn'),
+        snooze5Btn: $('snooze5Btn'),
+        snooze10Btn: $('snooze10Btn'),
+        toast: $('toast')
+      };
+
+      function pad(n) {
+        return String(n).padStart(2, '0');
+      }
+
+      function uuid() {
+        if (crypto && typeof crypto.randomUUID === 'function') return crypto.randomUUID();
+        return `alarm-${Date.now()}-${Math.random().toString(16).slice(2)}`;
+      }
+
+      function startOfMinute(date) {
+        const d = new Date(date);
+        d.setSeconds(0, 0);
+        return d;
+      }
+
+      function todayISO() {
+        const now = new Date();
+        return `${now.getFullYear()}-${pad(now.getMonth() + 1)}-${pad(now.getDate())}`;
+      }
+
+      function localDateTimeISO(date) {
+        return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}T${pad(date.getHours())}:${pad(date.getMinutes())}:00`;
+      }
+
+      function parseLocalISO(value) {
+        if (!value) return null;
+        const d = new Date(value);
+        return Number.isNaN(d.getTime()) ? null : d;
+      }
+
+      function formatTime(date) {
+        return `${pad(date.getHours())}:${pad(date.getMinutes())}`;
+      }
+
+      function formatDateTime(date) {
+        const now = new Date();
+        const tomorrow = new Date(now);
+        tomorrow.setDate(tomorrow.getDate() + 1);
+        const sameDay = date.toDateString() === now.toDateString();
+        const nextDay = date.toDateString() === tomorrow.toDateString();
+        if (sameDay) return `Heute, ${formatTime(date)}`;
+        if (nextDay) return `Morgen, ${formatTime(date)}`;
+        return date.toLocaleDateString('de-DE', { weekday: 'short', day: '2-digit', month: '2-digit' }) + `, ${formatTime(date)}`;
+      }
+
+      function setDefaults() {
+        const now = new Date();
+        const next = new Date(now.getTime() + 60 * 1000);
+        dom.hour.value = pad(next.getHours());
+        dom.minute.value = pad(next.getMinutes());
+        dom.date.value = todayISO();
+      }
+
+      function loadAlarms() {
+        try {
+          const raw = localStorage.getItem(STORAGE_KEY);
+          state.alarms = raw ? JSON.parse(raw) : [];
+          if (!Array.isArray(state.alarms)) state.alarms = [];
+        } catch (_) {
+          state.alarms = [];
+          toast('Gespeicherte Alarme konnten nicht gelesen werden. Neuer leerer Stand wurde gestartet.');
+        }
+      }
+
+      function saveAlarms() {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(state.alarms));
+      }
+
+      function normalizeHourMinute() {
+        const hour = Number(dom.hour.value);
+        const minute = Number(dom.minute.value);
+        if (!Number.isInteger(hour) || hour < 0 || hour > 23) throw new Error('Bitte eine Stunde zwischen 0 und 23 eingeben.');
+        if (!Number.isInteger(minute) || minute < 0 || minute > 59) throw new Error('Bitte eine Minute zwischen 0 und 59 eingeben.');
+        dom.hour.value = pad(hour);
+        dom.minute.value = pad(minute);
+        return { hour, minute };
+      }
+
+      function createAlarm({ label, hour, minute, repeat, date, triggerAt, temporary = false }) {
+        const now = new Date();
+        return {
+          id: uuid(),
+          label: label || 'Wecker',
+          hour,
+          minute,
+          repeat,
+          date: date || null,
+          triggerAt: triggerAt || null,
+          temporary,
+          enabled: true,
+          createdAt: now.toISOString(),
+          lastTriggeredKey: null
+        };
+      }
+
+      function nextTrigger(alarm, now = new Date()) {
+        if (!alarm.enabled) return null;
+
+        if (alarm.repeat === 'once' || alarm.temporary) {
+          const trigger = parseLocalISO(alarm.triggerAt);
+          if (!trigger) return null;
+          return trigger;
+        }
+
+        const candidate = new Date(now);
+        candidate.setHours(alarm.hour, alarm.minute, 0, 0);
+
+        if (alarm.repeat === 'daily') {
+          if (candidate <= now) candidate.setDate(candidate.getDate() + 1);
+          return candidate;
+        }
+
+        if (alarm.repeat === 'weekdays') {
+          for (let i = 0; i < 8; i += 1) {
+            const d = new Date(now);
+            d.setDate(d.getDate() + i);
+            d.setHours(alarm.hour, alarm.minute, 0, 0);
+            const day = d.getDay();
+            const isWeekday = day >= 1 && day <= 5;
+            if (isWeekday && d > now) return d;
+          }
+        }
+
+        return null;
+      }
+
+      function alarmTypeText(alarm) {
+        if (alarm.temporary) return 'Snooze';
+        if (alarm.repeat === 'daily') return 'Täglich';
+        if (alarm.repeat === 'weekdays') return 'Mo–Fr';
+        return 'Einmalig';
+      }
+
+      function render() {
+        const now = new Date();
+        const sorted = [...state.alarms].sort((a, b) => {
+          const at = nextTrigger(a, now)?.getTime() ?? Number.MAX_SAFE_INTEGER;
+          const bt = nextTrigger(b, now)?.getTime() ?? Number.MAX_SAFE_INTEGER;
+          return at - bt;
+        });
+
+        dom.alarmList.innerHTML = '';
+        dom.count.textContent = `${state.alarms.length} ${state.alarms.length === 1 ? 'Wecker' : 'Wecker'}`;
+
+        const next = sorted.map(a => ({ alarm: a, trigger: nextTrigger(a, now) })).find(x => x.trigger && x.alarm.enabled);
+        dom.nextText.textContent = next ? `Nächster Alarm: ${formatDateTime(next.trigger)}` : 'Kein aktiver Alarm';
+
+        if (sorted.length === 0) {
+          const empty = document.createElement('div');
+          empty.className = 'empty';
+          empty.innerHTML = '<div><strong>Noch kein Wecker</strong><span>Erstelle links deinen ersten Alarm oder nutze einen Schnellwecker.</span></div>';
+          dom.alarmList.appendChild(empty);
+          return;
+        }
+
+        for (const alarm of sorted) {
+          const trigger = nextTrigger(alarm, now);
+          const item = document.createElement('article');
+          item.className = `alarm-item ${alarm.enabled ? '' : 'off'}`;
+
+          const typeClass = alarm.temporary ? 'snooze' : '';
+          const statusClass = alarm.enabled ? 'active' : 'off';
+          const statusText = alarm.enabled ? 'Aktiv' : 'Aus';
+          const nextText = alarm.enabled && trigger ? formatDateTime(trigger) : '—';
+
+          item.innerHTML = `
+            <div class="alarm-time">${pad(alarm.hour)}:${pad(alarm.minute)}</div>
+            <div class="alarm-info">
+              <h3>${escapeHTML(alarm.label)}</h3>
+              <div class="meta">
+                <span class="pill ${statusClass}">${statusText}</span>
+                <span class="pill ${typeClass}">${alarmTypeText(alarm)}</span>
+                <span>Nächstes Mal: ${escapeHTML(nextText)}</span>
+              </div>
+            </div>
+            <div class="item-actions">
+              <button class="icon-btn" type="button" title="Ein/Aus" data-action="toggle" data-id="${alarm.id}">${alarm.enabled ? '⏸' : '▶'}</button>
+              <button class="icon-btn" type="button" title="+5 Minuten Snooze" data-action="snooze" data-id="${alarm.id}">+5</button>
+              <button class="icon-btn" type="button" title="Löschen" data-action="delete" data-id="${alarm.id}">✕</button>
+            </div>
+          `;
+          dom.alarmList.appendChild(item);
+        }
+      }
+
+      function escapeHTML(value) {
+        return String(value).replace(/[&<>'"]/g, char => ({
+          '&': '&amp;',
+          '<': '&lt;',
+          '>': '&gt;',
+          "'": '&#39;',
+          '"': '&quot;'
+        }[char]));
+      }
+
+      function addAlarmFromForm(event) {
+        event.preventDefault();
+        try {
+          const { hour, minute } = normalizeHourMinute();
+          const repeat = dom.repeat.value;
+          const label = dom.label.value.trim();
+          let triggerAt = null;
+          let date = dom.date.value;
+
+          if (repeat === 'once') {
+            if (!date) date = todayISO();
+            const trigger = new Date(`${date}T${pad(hour)}:${pad(minute)}:00`);
+            if (Number.isNaN(trigger.getTime())) throw new Error('Bitte ein gültiges Datum eingeben.');
+            if (trigger <= new Date()) throw new Error('Ein einmaliger Wecker muss in der Zukunft liegen.');
+            triggerAt = localDateTimeISO(trigger);
+          }
+
+          const alarm = createAlarm({ label, hour, minute, repeat, date, triggerAt });
+          state.alarms.push(alarm);
+          saveAlarms();
+          render();
+          dom.formStatus.textContent = `Gespeichert: ${alarm.label} um ${pad(hour)}:${pad(minute)}.`;
+          toast('Wecker gespeichert.');
+        } catch (err) {
+          dom.formStatus.textContent = err.message || 'Der Wecker konnte nicht erstellt werden.';
+        }
+      }
+
+      function setQuickAlarm(minutes) {
+        const target = new Date(Date.now() + minutes * 60 * 1000);
+        dom.hour.value = pad(target.getHours());
+        dom.minute.value = pad(target.getMinutes());
+        dom.repeat.value = 'once';
+        dom.date.value = `${target.getFullYear()}-${pad(target.getMonth() + 1)}-${pad(target.getDate())}`;
+        updateDateField();
+        dom.label.value = `In ${minutes} min`;
+        const alarm = createAlarm({
+          label: `In ${minutes} min`,
+          hour: target.getHours(),
+          minute: target.getMinutes(),
+          repeat: 'once',
+          date: dom.date.value,
+          triggerAt: localDateTimeISO(target)
+        });
+        state.alarms.push(alarm);
+        saveAlarms();
+        render();
+        toast(`Schnellwecker für ${formatTime(target)} erstellt.`);
+      }
+
+      function updateDateField() {
+        dom.dateField.style.display = dom.repeat.value === 'once' ? 'block' : 'none';
+      }
+
+      function handleListClick(event) {
+        const button = event.target.closest('button[data-action]');
+        if (!button) return;
+        const id = button.dataset.id;
+        const action = button.dataset.action;
+        const alarm = state.alarms.find(a => a.id === id);
+        if (!alarm) return;
+
+        if (action === 'toggle') {
+          alarm.enabled = !alarm.enabled;
+          alarm.lastTriggeredKey = null;
+          if (alarm.enabled && (alarm.repeat === 'once' || alarm.temporary)) {
+            const oldTrigger = parseLocalISO(alarm.triggerAt);
+            if (!oldTrigger || oldTrigger <= new Date()) {
+              const next = new Date();
+              next.setHours(alarm.hour, alarm.minute, 0, 0);
+              if (next <= new Date()) next.setDate(next.getDate() + 1);
+              alarm.triggerAt = localDateTimeISO(next);
+            }
+          }
+          saveAlarms();
+          render();
+        }
+
+        if (action === 'delete') {
+          state.alarms = state.alarms.filter(a => a.id !== id);
+          saveAlarms();
+          render();
+          toast('Wecker gelöscht.');
+        }
+
+        if (action === 'snooze') {
+          createSnooze(alarm, 5);
+        }
+      }
+
+      function checkAlarms() {
+        const now = new Date();
+        const nowMinute = startOfMinute(now).getTime();
+
+        for (const alarm of state.alarms) {
+          if (!alarm.enabled) continue;
+          const trigger = nextTrigger(alarm, now);
+          if (!trigger) continue;
+
+          const triggerMinute = startOfMinute(trigger).getTime();
+          const key = `${alarm.id}-${triggerMinute}`;
+          const isDue = triggerMinute <= nowMinute;
+
+          if (isDue && alarm.lastTriggeredKey !== key) {
+            alarm.lastTriggeredKey = key;
+            if (alarm.repeat === 'once' || alarm.temporary) alarm.enabled = false;
+            saveAlarms();
+            render();
+            fireAlarm(alarm);
+            break;
+          }
+        }
+      }
+
+      function fireAlarm(alarm) {
+        state.activeAlarm = alarm;
+        dom.popupTitle.textContent = `${pad(alarm.hour)}:${pad(alarm.minute)}`;
+        dom.popupLabel.textContent = alarm.label || 'Wecker';
+        dom.alarmModal.classList.add('open');
+        document.title = `⏰ ${alarm.label || 'Wecker'}`;
+        startRinging();
+        showNotification(alarm);
+      }
+
+      function ensureAudioContext() {
+        const AudioCtx = window.AudioContext || window.webkitAudioContext;
+        if (!AudioCtx) return null;
+        if (!state.audioContext) state.audioContext = new AudioCtx();
+        if (state.audioContext.state === 'suspended') state.audioContext.resume();
+        return state.audioContext;
+      }
+
+      function beep(duration = 0.35, frequency = 880) {
+        const ctx = ensureAudioContext();
+        if (!ctx) return;
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.type = 'sine';
+        osc.frequency.value = frequency;
+        gain.gain.setValueAtTime(0.0001, ctx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.35, ctx.currentTime + 0.02);
+        gain.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + duration);
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.start();
+        osc.stop(ctx.currentTime + duration + 0.02);
+        state.audioNodes.push(osc, gain);
+      }
+
+      function startRinging() {
+        stopRinging(false);
+        beep(0.42, 880);
+        state.ringingTimer = setInterval(() => {
+          beep(0.22, 880);
+          setTimeout(() => beep(0.22, 1174), 260);
+        }, 1200);
+      }
+
+      function stopRinging(closeModal = true) {
+        if (state.ringingTimer) {
+          clearInterval(state.ringingTimer);
+          state.ringingTimer = null;
+        }
+        state.audioNodes.length = 0;
+        if (closeModal) {
+          dom.alarmModal.classList.remove('open');
+          document.title = 'Finns Wecker';
+          state.activeAlarm = null;
+        }
+      }
+
+      function createSnooze(original, minutes) {
+        const target = new Date(Date.now() + minutes * 60 * 1000);
+        const alarm = createAlarm({
+          label: `Snooze: ${original.label || 'Wecker'}`,
+          hour: target.getHours(),
+          minute: target.getMinutes(),
+          repeat: 'once',
+          date: `${target.getFullYear()}-${pad(target.getMonth() + 1)}-${pad(target.getDate())}`,
+          triggerAt: localDateTimeISO(target),
+          temporary: true
+        });
+        state.alarms.push(alarm);
+        saveAlarms();
+        render();
+        toast(`Snooze für ${formatTime(target)} erstellt.`);
+      }
+
+      function requestNotifications() {
+        if (!('Notification' in window)) {
+          toast('Dieser Browser unterstützt keine Benachrichtigungen.');
+          return;
+        }
+        Notification.requestPermission().then(permission => {
+          toast(permission === 'granted' ? 'Benachrichtigungen aktiviert.' : 'Benachrichtigungen nicht aktiviert.');
+        });
+      }
+
+      function showNotification(alarm) {
+        if (!('Notification' in window) || Notification.permission !== 'granted') return;
+        try {
+          new Notification('Finns Wecker', {
+            body: `${alarm.label || 'Alarm'} — ${pad(alarm.hour)}:${pad(alarm.minute)}`,
+            tag: alarm.id,
+            renotify: true
+          });
+        } catch (_) {}
+      }
+
+      async function toggleWakeLock() {
+        if (!('wakeLock' in navigator)) {
+          toast('Wake Lock wird von diesem Browser nicht unterstützt.');
+          return;
+        }
+        try {
+          if (state.wakeLock) {
+            await state.wakeLock.release();
+            state.wakeLock = null;
+            dom.wakeBtn.textContent = 'Bildschirm wach halten';
+            toast('Wake Lock deaktiviert.');
+            return;
+          }
+          state.wakeLock = await navigator.wakeLock.request('screen');
+          dom.wakeBtn.textContent = 'Wake Lock aktiv';
+          state.wakeLock.addEventListener('release', () => {
+            state.wakeLock = null;
+            dom.wakeBtn.textContent = 'Bildschirm wach halten';
+          });
+          toast('Bildschirm wird wach gehalten, solange die Seite offen ist.');
+        } catch (_) {
+          toast('Wake Lock konnte nicht aktiviert werden.');
+        }
+      }
+
+      function tickClock() {
+        const now = new Date();
+        dom.clock.textContent = now.toLocaleTimeString('de-DE', {
+          hour: '2-digit', minute: '2-digit', second: '2-digit'
+        });
+        dom.dateText.textContent = now.toLocaleDateString('de-DE', {
+          weekday: 'long', day: '2-digit', month: 'long', year: 'numeric'
+        });
+      }
+
+      function cleanDone() {
+        const now = new Date();
+        const before = state.alarms.length;
+        state.alarms = state.alarms.filter(a => {
+          if (a.repeat !== 'once' && !a.temporary) return true;
+          if (a.enabled) return true;
+          const trigger = parseLocalISO(a.triggerAt);
+          return trigger && trigger > now;
+        });
+        saveAlarms();
+        render();
+        toast(`${before - state.alarms.length} erledigte Wecker gelöscht.`);
+      }
+
+      function clearAll() {
+        if (!state.alarms.length) return;
+        if (!confirm('Alle Wecker wirklich löschen?')) return;
+        state.alarms = [];
+        saveAlarms();
+        render();
+        toast('Alle Wecker gelöscht.');
+      }
+
+      let toastTimer = null;
+      function toast(message) {
+        dom.toast.textContent = message;
+        dom.toast.classList.add('show');
+        clearTimeout(toastTimer);
+        toastTimer = setTimeout(() => dom.toast.classList.remove('show'), 2600);
+      }
+
+      function wireEvents() {
+        dom.alarmForm.addEventListener('submit', addAlarmFromForm);
+        dom.repeat.addEventListener('change', updateDateField);
+        dom.alarmList.addEventListener('click', handleListClick);
+        dom.notifyBtn.addEventListener('click', requestNotifications);
+        dom.wakeBtn.addEventListener('click', toggleWakeLock);
+        dom.testBtn.addEventListener('click', () => {
+          beep(0.22, 880);
+          setTimeout(() => beep(0.22, 1174), 260);
+          toast('Testton abgespielt.');
+        });
+        dom.clearDoneBtn.addEventListener('click', cleanDone);
+        dom.clearAllBtn.addEventListener('click', clearAll);
+        dom.stopAlarmBtn.addEventListener('click', () => stopRinging(true));
+        dom.snooze5Btn.addEventListener('click', () => {
+          if (state.activeAlarm) createSnooze(state.activeAlarm, 5);
+          stopRinging(true);
+        });
+        dom.snooze10Btn.addEventListener('click', () => {
+          if (state.activeAlarm) createSnooze(state.activeAlarm, 10);
+          stopRinging(true);
+        });
+        document.querySelectorAll('[data-quick]').forEach(btn => {
+          btn.addEventListener('click', () => setQuickAlarm(Number(btn.dataset.quick)));
+        });
+        window.addEventListener('beforeunload', () => stopRinging(false));
+        document.addEventListener('visibilitychange', async () => {
+          if (document.visibilityState === 'visible' && state.wakeLock === null && dom.wakeBtn.textContent === 'Wake Lock aktiv') {
+            await toggleWakeLock();
+          }
+        });
+      }
+
+      function init() {
+        setDefaults();
+        updateDateField();
+        loadAlarms();
+        wireEvents();
+        tickClock();
+        render();
+        setInterval(tickClock, 1000);
+        setInterval(checkAlarms, 1000);
+      }
+
+      init();
+    })();
+  </script>
 </body>
 </html>

@@ -1,38 +1,35 @@
-# Finns Wecker – Web-App
+# Finns Wecker
 
-Das ist eine neu entwickelte Wecker-App mit HTML, CSS und JavaScript. Sie nutzt keine externen Pakete und läuft direkt im Browser.
+Eine einfache, moderne Wecker-Web-App für GitHub Pages.
 
-## Start
+## Dateien
 
-Einfach `index.html` doppelklicken.
-
-Besser für Benachrichtigungen und Wake-Lock ist der Start über einen lokalen Server:
-
-```bash
-cd /Users/finnguttknecht/Documents/GitHub/Wecker
-python3 -m http.server 8080
-```
-
-Dann im Browser öffnen:
+Diese Dateien müssen direkt im Root deines GitHub-Repositories liegen:
 
 ```text
-http://localhost:8080
+index.html
+README.md
+.nojekyll
 ```
 
-## Funktionen
+## GitHub Pages aktivieren
 
-- große sichtbare Eingabefelder
-- moderne responsive Oberfläche
-- einmalige Alarme mit Datum
-- tägliche Alarme
-- Mo–Fr-Alarme
-- Schnellwecker: +1, +5, +10, +30 Minuten
-- Alarmton über Web Audio
-- Snooze 5 oder 10 Minuten
-- lokale Speicherung im Browser per localStorage
-- Browser-Benachrichtigungen, falls erlaubt
-- Wake-Lock-Funktion, falls vom Browser unterstützt
+1. Repository öffnen
+2. `Add file` → `Upload files`
+3. `index.html`, `README.md` und `.nojekyll` hochladen
+4. `Commit changes`
+5. `Settings` → `Pages`
+6. `Source`: `Deploy from a branch`
+7. `Branch`: `main`
+8. `Folder`: `/ root`
+9. `Save`
 
-## Wichtige Einschränkung
+Nach kurzer Zeit ist die Seite erreichbar unter:
 
-Eine reine Web-App kann keinen Alarm auslösen, wenn der Browser geschlossen ist oder der Mac schläft. Der Tab muss offen bleiben. Für eine echte native Desktop-App wäre später Electron, Tauri oder SwiftUI sinnvoller.
+```text
+https://DEIN-USERNAME.github.io/DEIN-REPO/
+```
+
+## Wichtig
+
+Der Wecker läuft im Browser. Die Seite muss geöffnet bleiben. Wenn der Mac schläft oder der Tab geschlossen wird, kann der Alarm nicht zuverlässig auslösen.
